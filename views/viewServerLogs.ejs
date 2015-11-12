@@ -1,0 +1,40 @@
+<%- include('z01header') %>
+
+<h1><%= title %></h1>
+
+<% if(typeof errMsg !== 'undefined' && errMsg) { %>
+<div class="alert alert-dismissable alert-warning">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <span><%= errMsg %></span>
+</div>
+<% } %>
+
+<% if(typeof logEntries !== 'undefined' && logEntries.length > 0) { %>
+  <table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Facility/Priority</th>
+            <th>Host</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% logEntries.forEach(function(item) { %>
+        <tr>
+          <td class="col-lg-2" id="ltime"><%= formatDate(item.DeviceReportedTime) %></td>
+          <td class="col-lg-2" id="facprio"><%= getFacility(item.Facility) + '.' + getPriority(item.Priority) %></td>
+          <td class="col-lg-2" id="hostname"><%= item.FromHost %></td>
+          <td class="col-lg-6" id="lmsg"><%= item.Message %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <p>
+    <span class="glyphicon glyphicon-asterisk"></span>
+    <%= logEntries.length %> syslog messages
+  </p>
+<% } %>
+
+<%- include('z02footer') %>

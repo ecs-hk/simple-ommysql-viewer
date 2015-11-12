@@ -1,0 +1,21 @@
+{
+  "name": "simple-rsyslog-mysql-viewer",
+  "version": "1.0.0",
+  "description": "View MySQL table rows, as written by the rsyslog-mysql app",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "helmet": "^0.14.0",
+    "moment": "^2.10.6",
+    "morgan": "^1.6.1",
+    "mysql": "^2.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Erik Schwartz",
+  "license": "ISC"
+}
