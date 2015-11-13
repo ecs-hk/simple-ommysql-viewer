@@ -29,7 +29,9 @@ Plan accordingly:
 
 ### HTTP/S connections
 
-The `simple-ommysql-viewer` provides an HTTP listener, as written. If you have access to a CA-signed x509 cert, then of course utilize Node.js's support for an HTTPS listener, a la:
+The `simple-ommysql-viewer` provides an HTTP listener, as written. If you have access to a CA-signed x509 cert, then it would be better to access the app over TLS (HTTPS).
+
+#### Example using Node.js
 
 ```
 var sslOptions = {
@@ -44,7 +46,9 @@ var server = https.createServer(sslOptions, app);
 
 There are a number of authentication possibilities, including HTTP Basic, via the [npm](https://www.npmjs.com/) repositories.
 
-As an alternative to providing an HTTPS listener from Node.js, you can also frontend the `simple-ommysql-viewer` app using another SSL-enabled HTTP server. Example with Apache HTTP Server:
+#### Example front-ending with Apache HTTP Server
+
+Alternatively, you can also front-end the `simple-ommysql-viewer` app using another TLS-enabled HTTP server, like Apache HTTP Server:
 
 ```
 LoadModule proxy_module modules/mod_proxy.so
@@ -60,13 +64,13 @@ ProxyPassReverse /logs/ http://127.0.0.1:8080/
 
 ### One-time preparation
 
-1. Install Node.js
-2. Set up your environment, e.g.:
+* Install Node.js
+* Set up your environment, e.g.:
 ```
 export NODE_PATH=/path/to/node-v4.2.1-linux-x64/lib/node_modules
 export PATH=/path/to/node-v4.2.1-linux-x64/bin:$PATH
 ```
-3. Install dependences, e.g.:
+* Install dependences, e.g.:
 ```
 cd simple-ommysql-viewer
 npm install
@@ -74,12 +78,12 @@ npm install
 
 ### Run it
 
-1. Set up your environment, e.g.:
+* Set up your environment, e.g.:
 ```
 export NODE_PATH=/path/to/node-v4.2.1-linux-x64/lib/node_modules
 export PATH=/path/to/node-v4.2.1-linux-x64/bin:$PATH
 ```
-2. Launch it using node
+* Launch it using node
 ```
 cd simple-ommysql-viewer
 node app.js
