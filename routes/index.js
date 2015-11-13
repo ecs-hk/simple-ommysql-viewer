@@ -31,7 +31,6 @@ function queryMysqlAndRespond(sqlQuery, req, res, title) {
           respondWithError('MySQL query error', res);
           return;
         } else {
-          console.log(rows);
           res.render('viewServerLogs.ejs', {title: title, logEntries: rows,
               formatDate: shortDateTime, getPriority: getPriority,
               getFacility: getFacility});
