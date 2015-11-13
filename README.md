@@ -6,6 +6,8 @@ Web app for viewing the special MySQL table that ommysql (rsyslog-mysql module) 
 
 Designed to be used as a companion app to [ec2-cfengine37](https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds).
 
+![Screenshot](/README.md-img/cfe-logs.png?raw=true)
+
 Tested with Node.js v4.2.1 LTS.
 
 * https://nodejs.org/
