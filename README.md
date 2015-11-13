@@ -4,7 +4,7 @@
 
 Web app for viewing the special MySQL table that ommysql (rsyslog-mysql module) inserts to. Built with Node.js, Express.js, EJS, Bootstrap, and several Javascript libraries.
 
-Designed to be used as a companion app to [https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds](ec2-cfengine37).
+Designed to be used as a companion app to [ec2-cfengine37](https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds).
 
 Tested with Node.js v4.2.1 LTS.
 
@@ -42,7 +42,7 @@ var sslOptions = {
 var server = https.createServer(sslOptions, app);
 ```
 
-There are a number of authentication possibilities, including HTTP Basic, via the [https://www.npmjs.com/](npm) repositories.
+There are a number of authentication possibilities, including HTTP Basic, via the [npm](https://www.npmjs.com/) repositories.
 
 As an alternative to providing an HTTPS listener from Node.js, you can also frontend the `simple-ommysql-viewer` app using another SSL-enabled HTTP server. Example with Apache HTTP Server:
 
