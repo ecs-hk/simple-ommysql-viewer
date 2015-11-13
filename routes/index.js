@@ -87,7 +87,7 @@ function getPriority(n) {
 // Exported functions
 // -------------------------------------------------------------------------
 exports.index = function(req, res) {
-  var title = 'Simple rsyslog-mysql viewer';
+  var title = 'Simple ommysql viewer';
   res.render('index.ejs', {title: title});
 };
 
