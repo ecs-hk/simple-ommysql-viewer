@@ -10,7 +10,8 @@
     "helmet": "^0.14.0",
     "moment": "^2.10.6",
     "morgan": "^1.6.1",
-    "mysql": "^2.9.0"
+    "mysql": "^2.9.0",
+    "request": "^2.72.0"
   },
   "devDependencies": {},
   "scripts": {

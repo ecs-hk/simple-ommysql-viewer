@@ -8,19 +8,20 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    helmet = require('helmet');
+    helmet = require('helmet'),
+    request = require('request'),
+    assert = require('assert'),
+    hostnameURI = 'http://169.254.169.254/latest/meta-data/public-hostname',
+    tcpPort = 8080;
 
 var app = express();
 
 var server = http.createServer(app);
 
 // -------------------------------------------------------------------------
-// Variable definitions sucked in from config files
+// MySQL hostname and credentials sucked in from config file
 // -------------------------------------------------------------------------
-var listener = fs.readFileSync(path.join(__dirname, 'config',
-        'http-listener.json')),
-    listener = JSON.parse(listener),
-    mysqlCreds = fs.readFileSync(path.join(__dirname, 'config',
+var mysqlCreds = fs.readFileSync(path.join(__dirname, 'config',
         'mysql-creds.json')),
     mysqlCreds = JSON.parse(mysqlCreds);
 
@@ -64,9 +65,16 @@ app.use(function(err, req, res, next) {
 });
 
 // -------------------------------------------------------------------------
-// Fire up the HTTP server
+// Get the public hostname and fire up the HTTP server
 // -------------------------------------------------------------------------
-server.listen(listener.port, listener.ip, function(){
-  console.log('HTTP server listening on ' + listener.ip + ':' +
-      listener.port);
+request.get(hostnameURI, function(err, res, body) {
+  assert.equal(null, err);
+  assert.equal(res.statusCode, 200);
+
+  var publicHostname = body;
+
+  server.listen(tcpPort, publicHostname, function(){
+    console.log('HTTP server listening on http://' + publicHostname + ':' +
+        tcpPort);
+  });
 });
