@@ -111,6 +111,7 @@ exports.viewHighPriorityLogs = function(req, res) {
       q = 'SELECT * FROM Syslog.SystemEvents ' +
           'WHERE DeviceReportedTime BETWEEN ? AND ? ' +
           'AND Priority IN ("0","1","2") ' +
+          'AND Facility != "19" ' +
           'ORDER BY DeviceReportedTime DESC ' +
           'LIMIT 300';
 

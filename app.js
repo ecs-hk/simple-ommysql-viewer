@@ -73,8 +73,8 @@ request.get(hostnameURI, function(err, res, body) {
 
   var publicHostname = body;
 
-  server.listen(tcpPort, publicHostname, function(){
-    console.log('HTTP server listening on http://' + publicHostname + ':' +
-        tcpPort);
+  server.listen(tcpPort, function(){
+    console.log('HTTP server listening on all interfaces');
+    console.log('public name: http://' + publicHostname + ':' + tcpPort);
   });
 });
