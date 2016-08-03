@@ -2,13 +2,13 @@
 
 ## Synopsis
 
-Web app for viewing the special MySQL table that ommysql (rsyslog-mysql module) inserts to. Built with Node.js, Express.js, EJS, Bootstrap, and several Javascript libraries.
+Web app for viewing the special MariaDB / MySQL table that ommysql (rsyslog-mysql module) inserts to. Built with Node.js, Express.js, EJS, Bootstrap, and several Javascript libraries.
 
 Designed to be used as a companion app to [ec2-cfengine37](https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds).
 
 ![Screenshot](/README.md-img/cfe-logs.png?raw=true)
 
-Tested with Node.js v4.2.1 LTS.
+Tested with Node.js v4.4.* LTS.
 
 * https://nodejs.org/
 * http://getbootstrap.com/
@@ -16,7 +16,7 @@ Tested with Node.js v4.2.1 LTS.
 
 ## A word about security
 
-### MySQL connections
+### MariaDB / MySQL connections
 
 First of all, the ommysql module sends your MySQL service account credentials, along with all logged messages, clear text across the wire.
 
@@ -25,8 +25,7 @@ Secondly, the `simple-ommysql-viewer` app sends your MySQL service account crede
 Plan accordingly:
 
 * If you use AWS EC2, make your MySQL connections over your VPC subnet.
-* If you are using another hosting provider, make your MySQL connections over non-routed or RFC 1918 private networks.
-* Configure EC2 Security Groups and/or packet filtering to open the MySQL service port only to hosts that really need access.
+* Configure EC2 Security Groups to open the MySQL service port only to hosts that really need access.
 * Utilize separate accounts for privilege separation. Use an account for just ommysql, and nothing else. Use a separate account for `simple-ommysql-viewer`, and nothing else.
 
 ### HTTP/S connections
