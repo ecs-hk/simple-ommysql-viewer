@@ -9,12 +9,26 @@
 </div>
 <% } %>
 
+<nav class="navbar navbar-default">
+<form class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+        <label for="hostInput">Host</label>
+        <input class="form-control" name="hostInput" id="hostInput" type="text">
+    </div>
+    <div class="form-group">
+        <label for="msgInput">Message</label>
+        <input class="form-control" name="msgInput" id="msgInput" type="text">
+    </div>
+    <button type="submit" class="btn btn-default">Filter</button>
+    <span class="glyphicon glyphicon-question-sign" title="% is wildcard, as in %backup%"></span>
+</form>
+</nav>
+
 <% if(typeof logEntries !== 'undefined' && logEntries.length > 0) { %>
   <table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Time</th>
-            <th>Facility/Priority</th>
             <th>Host</th>
             <th>Message</th>
         </tr>
@@ -22,10 +36,12 @@
     <tbody>
       <% logEntries.forEach(function(item) { %>
         <tr>
+	<tr data-toggle="popover" data-container="body" data-placement="top"
+                title="Facility"
+                data-content="<%= getFacility(item.Facility) + '.' + getPriority(item.Priority) %>">
           <td class="col-lg-2" id="ltime"><%= formatDate(item.DeviceReportedTime) %></td>
-          <td class="col-lg-2" id="facprio"><%= getFacility(item.Facility) + '.' + getPriority(item.Priority) %></td>
           <td class="col-lg-2" id="hostname"><%= item.FromHost %></td>
-          <td class="col-lg-6" id="lmsg"><%= item.Message %></td>
+          <td class="col-lg-8" id="lmsg"><%= item.Message %></td>
         </tr>
       <% }) %>
     </tbody>

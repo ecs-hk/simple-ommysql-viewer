@@ -7,6 +7,22 @@ var mysql = require('mysql'),
 // -------------------------------------------------------------------------
 // Helper functions
 // -------------------------------------------------------------------------
+function validUserInput(suspect) {
+  var re = /^([a-zA-Z0-9]|[.%-]|\s)+$/;
+
+  if(re.test(suspect)) {
+    return true;
+  }
+  return false;
+}
+
+function buildQueryFilter(col, val) {
+  if(val && validUserInput(val)) {
+    return 'AND ' + col + ' LIKE "' + val + '" ';
+  }
+  return '';
+}
+
 function respondWithError(errMsg, res) {
   res.status(500);
   res.render('error.ejs', {title: 'HTTP 500: internal error',
@@ -93,11 +109,15 @@ exports.index = function(req, res) {
 
 exports.viewCfeLogs = function(req, res) {
   var title = 'CFEngine log details',
+      host = req.query.hostInput,
+      msg = req.query.msgInput,
       // For Facility and Priority number mappings, see:
       // https://en.wikipedia.org/wiki/Syslog
       q = 'SELECT * FROM Syslog.SystemEvents ' +
           'WHERE DeviceReportedTime BETWEEN ? AND ? ' +
           'AND Facility = "19" ' +
+          buildQueryFilter('FromHost', host) +
+          buildQueryFilter('Message', msg) +
           'ORDER BY DeviceReportedTime DESC ' +
           'LIMIT 300';
 
@@ -106,12 +126,15 @@ exports.viewCfeLogs = function(req, res) {
 
 exports.viewHighPriorityLogs = function(req, res) {
   var title = 'High-severity log details',
+      host = req.query.hostInput,
+      msg = req.query.msgInput,
       // For Facility and Priority number mappings, see:
       // https://en.wikipedia.org/wiki/Syslog
       q = 'SELECT * FROM Syslog.SystemEvents ' +
           'WHERE DeviceReportedTime BETWEEN ? AND ? ' +
           'AND Priority IN ("0","1","2") ' +
-          'AND Facility != "19" ' +
+          buildQueryFilter('FromHost', host) +
+          buildQueryFilter('Message', msg) +
           'ORDER BY DeviceReportedTime DESC ' +
           'LIMIT 300';
 
