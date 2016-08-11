@@ -2,7 +2,9 @@
 // Variable definitions
 // -------------------------------------------------------------------------
 var mysql = require('mysql'),
-    moment = require('moment');
+    moment = require('moment'),
+    numDays = 7,
+    maxRows = 300;
 
 // -------------------------------------------------------------------------
 // Helper functions
@@ -31,7 +33,7 @@ function respondWithError(errMsg, res) {
 
 function queryMysqlAndRespond(sqlQuery, req, res, title) {
   var today = moment().format('YYYY-MM-DD HH:mm:ss'),
-      past = moment().subtract(5, 'days').format('YYYY-MM-DD HH:mm:ss'),
+      past = moment().subtract(numDays, 'days').format('YYYY-MM-DD HH:mm:ss'),
       c = mysql.createConnection(req.app.locals.mysqlCreds);
 
   c.connect(function(err) {
@@ -49,7 +51,7 @@ function queryMysqlAndRespond(sqlQuery, req, res, title) {
         } else {
           res.render('viewServerLogs.ejs', {title: title, logEntries: rows,
               formatDate: shortDateTime, getPriority: getPriority,
-              getFacility: getFacility});
+              getFacility: getFacility, numDays: numDays});
         }
       });
     }
@@ -62,8 +64,8 @@ function shortDateTime(d) {
   }
   var month = [ 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep',
           'Oct','Nov','Dec' ],
-      shorty = month[d.getMonth()] + ' ' + d.getDate() + ' ' +
-         zeroPad(d.getHours()) + ':' + zeroPad(d.getMinutes());
+      shorty = month[d.getUTCMonth()] + ' ' + d.getUTCDate() + ' ' +
+         zeroPad(d.getUTCHours()) + ':' + zeroPad(d.getUTCMinutes());
 
   return shorty;
 }
@@ -107,19 +109,47 @@ exports.index = function(req, res) {
   res.render('index.ejs', {title: title});
 };
 
+exports.viewServerInfo = function(req, res) {
+  var title = 'Server info',
+      db = req.app.locals.mysqlCreds.database,
+      c = mysql.createConnection(req.app.locals.mysqlCreds),
+      q = 'SELECT * FROM ServerInfo ORDER BY Hostname';
+
+  c.connect(function(err) {
+    if(err) {
+      console.log(err);
+      respondWithError('MySQL connection error', res);
+      return;
+    } else {
+      c.query(q, function(err, rows, fields) {
+        c.end();
+        if(err) {
+          console.log(err);
+          respondWithError('MySQL query error', res);
+          return;
+        } else {
+          res.render('viewServerInfo.ejs', {title: title, servers: rows,
+              formatDate: shortDateTime});
+        }
+      });
+    }
+  });
+}
+
 exports.viewCfeLogs = function(req, res) {
   var title = 'CFEngine log details',
       host = req.query.hostInput,
       msg = req.query.msgInput,
+      db = req.app.locals.mysqlCreds.database,
       // For Facility and Priority number mappings, see:
       // https://en.wikipedia.org/wiki/Syslog
-      q = 'SELECT * FROM Syslog.SystemEvents ' +
-          'WHERE DeviceReportedTime BETWEEN ? AND ? ' +
+      q = 'SELECT * FROM ' + db + '.SystemEvents ' +
+          'WHERE ReceivedAt BETWEEN ? AND ? ' +
           'AND Facility = "19" ' +
           buildQueryFilter('FromHost', host) +
           buildQueryFilter('Message', msg) +
-          'ORDER BY DeviceReportedTime DESC ' +
-          'LIMIT 300';
+          'ORDER BY ReceivedAt DESC ' +
+          'LIMIT ' + maxRows;
 
   queryMysqlAndRespond(q, req, res, title);
 }
@@ -128,15 +158,16 @@ exports.viewHighPriorityLogs = function(req, res) {
   var title = 'High-severity log details',
       host = req.query.hostInput,
       msg = req.query.msgInput,
+      db = req.app.locals.mysqlCreds.database,
       // For Facility and Priority number mappings, see:
       // https://en.wikipedia.org/wiki/Syslog
-      q = 'SELECT * FROM Syslog.SystemEvents ' +
-          'WHERE DeviceReportedTime BETWEEN ? AND ? ' +
+      q = 'SELECT * FROM ' + db + '.SystemEvents ' +
+          'WHERE ReceivedAt BETWEEN ? AND ? ' +
           'AND Priority IN ("0","1","2") ' +
           buildQueryFilter('FromHost', host) +
           buildQueryFilter('Message', msg) +
-          'ORDER BY DeviceReportedTime DESC ' +
-          'LIMIT 300';
+          'ORDER BY ReceivedAt DESC ' +
+          'LIMIT ' + maxRows;
 
   queryMysqlAndRespond(q, req, res, title);
 }

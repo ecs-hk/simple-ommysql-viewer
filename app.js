@@ -45,8 +45,9 @@ app.use(bodyParser.json());
 // Express routes
 // -------------------------------------------------------------------------
 app.get('/', routes.index);
-app.get('/view-cfe-logs', routes.viewCfeLogs);
-app.get('/view-highprio-logs', routes.viewHighPriorityLogs);
+app.get('/server-info', routes.viewServerInfo);
+app.get('/cfe-logs', routes.viewCfeLogs);
+app.get('/highprio-logs', routes.viewHighPriorityLogs);
 
 // -------------------------------------------------------------------------
 // Express error handling

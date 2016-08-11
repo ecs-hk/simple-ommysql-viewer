@@ -39,18 +39,20 @@
 	<tr data-toggle="popover" data-container="body" data-placement="top"
                 title="Facility"
                 data-content="<%= getFacility(item.Facility) + '.' + getPriority(item.Priority) %>">
-          <td class="col-lg-2" id="ltime"><%= formatDate(item.DeviceReportedTime) %></td>
+          <td class="col-lg-2" id="ltime"><%= formatDate(item.ReceivedAt) %></td>
           <td class="col-lg-2" id="hostname"><%= item.FromHost %></td>
           <td class="col-lg-8" id="lmsg"><%= item.Message %></td>
         </tr>
       <% }) %>
     </tbody>
   </table>
-
-  <p>
-    <span class="glyphicon glyphicon-asterisk"></span>
-    <%= logEntries.length %> syslog messages
-  </p>
 <% } %>
+
+<div class="row">
+  <div class="col-sm-8">
+    <span class="glyphicon glyphicon-info-sign"></span>
+    <%= logEntries.length %> syslog messages in last <%= numDays %> days
+  </div>
+</div>
 
 <%- include('z02footer') %>

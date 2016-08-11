@@ -1,0 +1,88 @@
+<%- include('z01header') %>
+
+<% var nowDate = new Date(); %>
+
+<% function massageOS(os) {
+  var os = os.replace(/Red Hat Enterprise Linux Server/,'RHEL'),
+      os = os.replace(/Amazon Linux AMI/,'Amazon');
+  return os;
+} %>
+
+<% function formatFloat(n) {
+  if(!isNaN(n)) {
+    return Number(n).toFixed(2);
+  } else {
+    return n;
+  }
+} %>
+
+<% function calcRelativeDate(d) {
+  // If we didn't receive a real date, just give an ambiguous answer
+  if(! Object.prototype.toString.call(d) === '[object Date]') {
+    return 'unknown'
+  }
+  // Note that the date diff is in milliseconds
+  var dDiff = nowDate - d;
+  if(dDiff < (1000 * 59)) {
+    return 'seconds ago';
+  } else if(dDiff < (1000 * 60 * 10)) {
+    return 'minutes ago';
+  } else if(dDiff < (1000 * 60 * 60)) {
+    return 'within last hour';
+  } else if(dDiff < (1000 * 60 * 60 * 24)) {
+    return 'within last day';
+  } else {
+    return 'been awhile';
+  }
+} %>
+
+<h1><%= title %></h1>
+
+<% if(typeof errMsg !== 'undefined' && errMsg) { %>
+<div class="alert alert-dismissable alert-warning">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <span><%= errMsg %></span>
+</div> <!-- class alert -->
+<% } %>
+
+<div class="row">
+  <div class="col-sm-4">
+    <span class="glyphicon glyphicon-info-sign"></span>
+    <%= servers.length %> hosts
+  </div>
+</div>
+
+<% if(typeof servers !== 'undefined' && servers.length > 0) { %>
+  <table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Hostname</th>
+            <th>EC2 instance ID</th>
+            <th>CFEngine</th>
+            <th>OS</th>
+            <th>Uptime</th>
+            <th>Load avg</th>
+            <th>CPU count</th>
+            <th>Last updated</th>
+        </tr>
+    </thead>
+    <tbody>
+      <% servers.forEach(function(item) { %>
+        <tr data-toggle="popover" data-container="body" data-placement="top"
+            title="Public hostname" data-content="<%= item.PublicHostname %>">
+          <td id="hostname"><%= item.Hostname %></td>
+          <td id="instId"><%= item.InstID %></td>
+          <td id="cfePercent"><%= item.CFEPercent %>%</td>
+          <td id="os"><%= massageOS(item.OS) %></td>
+          <td id="uptime"><%= item.Uptime %></td>
+          <td id="loadAvg"><%= formatFloat(item.LoadAverage) %></td>
+          <td id="cpuCount"><%= item.CPUCount %></td>
+          <td id="lastUpdated"><%= calcRelativeDate(item.LastUpdated) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+<% } %>
+
+<%- include('z02footer') %>
