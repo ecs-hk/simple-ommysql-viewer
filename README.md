@@ -39,7 +39,6 @@ npm install
 export NODE_PATH=/path/to/node-v4.x.y/lib/node_modules
 export PATH=/path/to/node-v4.x.y/bin:$PATH
 ```
-```
 * Launch it using node
 ```
 cd simple-ommysql-viewer
@@ -59,4 +58,3 @@ ProxyRequests Off
 ProxyPass /cfeinfo/ http://127.0.0.1:8080/
 ProxyPassReverse /cfeinfo/ http://127.0.0.1:8080/
 ```
-
