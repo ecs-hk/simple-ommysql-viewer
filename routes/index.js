@@ -112,8 +112,11 @@ exports.index = function(req, res) {
 exports.viewServerInfo = function(req, res) {
   var title = 'Server info',
       db = req.app.locals.mysqlCreds.database,
+      past = moment().subtract(numDays, 'days').format('YYYY-MM-DD HH:mm:ss'),
       c = mysql.createConnection(req.app.locals.mysqlCreds),
-      q = 'SELECT * FROM ServerInfo ORDER BY Hostname';
+      q = 'SELECT * FROM ServerInfo ' +
+          'WHERE LastUpdated > ? ' +
+          'ORDER BY Hostname';
 
   c.connect(function(err) {
     if(err) {
@@ -121,7 +124,7 @@ exports.viewServerInfo = function(req, res) {
       respondWithError('MySQL connection error', res);
       return;
     } else {
-      c.query(q, function(err, rows, fields) {
+      c.query(q, [past], function(err, rows, fields) {
         c.end();
         if(err) {
           console.log(err);
