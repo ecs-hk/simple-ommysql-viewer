@@ -1,10 +1,10 @@
 # Simple ommysql log viewer
 
-Designed to be used as a companion app to [ec2-cfengine37](https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds).
+Companion app for [ec2-cfengine37](https://github.com/ecs-hk/ec2-cfengine37#promise-logging-to-a-mysql-db-eg-aws-rds).
 
 ## Synopsis
 
-Web app for viewing CFEngine loggine and EC2 instance metadata. Built with Node.js, Express.js, EJS, Bootstrap, and several Javascript libraries.
+Web app for viewing CFEngine logging and EC2 instance metadata. Built with Node.js, Express.js, EJS, Bootstrap / Bootswatch, and several Javascript libraries.
 
 ![Screenshot](/README.md-img/srv-info.png?raw=true)
 
@@ -20,16 +20,22 @@ Tested with Node.js v4.4.* LTS.
 
 ### One-time preparation
 
-* Download and install Node.js
+* Download and install Node.js LTS
 * Set up your environment, e.g.:
 ```
 export NODE_PATH=/path/to/node-v4.x.y/lib/node_modules
 export PATH=/path/to/node-v4.x.y/bin:$PATH
 ```
-* Install dependences, e.g.:
+* Install dependences:
 ```
 cd simple-ommysql-viewer
 npm install
+```
+* Set up RDS connection info:
+```
+cd simple-ommysql-viewer/config
+cp mysql-creds.json.EXAMPLE mysql-creds.json
+vi mysql-creds.json
 ```
 
 ### Run it
